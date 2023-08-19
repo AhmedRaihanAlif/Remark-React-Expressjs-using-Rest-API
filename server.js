@@ -8,3 +8,9 @@ app.use("/api/contacts",require("./routes/contactRoutes.js"));
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });
+
+//   app.listen(5002, function(){
+//     var host = server.address().address
+//     var port = server.address().port
+//     console.log("REST API demo app listening at http://%s:%s", host, port)
+// })
