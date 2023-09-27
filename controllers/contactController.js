@@ -3,8 +3,11 @@ const axios = require("axios");
 const pool = require("../database");
 const jwt=require('jsonwebtoken');
 const checkLogin = require('../middleware/checkLogin');
+// const express = require("express");
+// const router = express.Router();
+const transporter=require("../middleware/otp");
 //const checkLogin=require("../middleware/checkLogin");
-
+let stringify = require('json-stringify-safe');
 
 
 const get=( async (req, res) => {
@@ -132,10 +135,70 @@ const getContact = (req, res) => {
 //   })
 //  }
  ////////Remark website er jnnw Signup from Admin
+ var compareotpp;
+ function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+ const sendOtp = async (response,req, res) => {
+ 
+  try {
+    console.log(response+"response");
+    
+    const email = response;
+    console.log(email+"email");
+    const otpp = generateOTP();
+    console.log(otpp+"otp");
+    compareOtpp=otpp;
+    console.log("compareotp"+compareOtpp);
+   
+    // Create an email message
+    const mailOptions = {
+      from: 'ahmedraihanalif@gmail.com',
+      to: email,
+      subject: 'Your OTP Code',
+      text: `Your OTP code is: ${otpp}`,
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
+   
+
+    // You can save the OTP in a database for validation later
+
+    res.json({ message: 'OTP sent successfully' });
+   // return otp;
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+   // res.json({ message: 'Internal Server Error' });
+    //res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+const compareOtp = async (req, res) => {
+  console.log(req.body);
+  console.log("Teri ooo");
+  const { verificationcode } = req.body;
+  console.log(verificationcode);
+  console.log(JSON.stringify (verificationcode));
+  console.log("Compareotp: "+compareOtpp);
+  var myBooleanValue = null;
+  if(verificationcode===compareOtpp){
+     myBooleanValue = true;
+    res.status(200).json({ success: true, data: myBooleanValue });
+    console.log(res);
+  }
+  else{
+    myBooleanValue = false;
+    res.status(200).json({ success: true, data: myBooleanValue });
+  }
+ 
+ 
+}
  const userSignup = async (req, res) => {
  
-  const { user_id,user_name,user_password,user_role } = req.body
-  
+  const { user_id,user_name,user_email,user_password,user_role } = req.body
+  const otp = sendOtp(user_email); 
+  console.log(otp+"sign up otp");
   const salt=await bcrypt.genSalt();
   const pass=await bcrypt.hash(user_password,salt);
   
@@ -280,4 +343,4 @@ const getContact = (req, res) => {
 // };
 
 
-module.exports={getSales,getContacts,updateContact,deleteContact,getContact,get,userLogin,getProducts,userSignup};
+module.exports={getSales,getContacts,updateContact,deleteContact,getContact,get,userLogin,getProducts,userSignup,sendOtp,compareOtp};
