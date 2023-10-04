@@ -28,6 +28,7 @@ const get=( async (req, res) => {
   }
 });
 
+
 const getContacts= async (req,res)=>{
    await pool.query("SELECT * FROM accounts ORDER BY user_id ASC ",(error,result)=>{
         if(error)
@@ -41,29 +42,24 @@ const getContacts= async (req,res)=>{
   
 
 }
-const getSales= (async (req,res)=>{
-  // console.log("Hola");
-  // console.log(req.user_role);
-  // if(req.user_role=="1"){
-  await pool.query("SELECT * FROM usersignup ORDER BY user_id ASC ",(error,result)=>{
-       if(error)
-       throw error;
-       
-       
-       res.status(200).json(result.rows);
-         
-       }
-   )
-     // }
-      // else{
-      //  console.log("Employee not enter");
-      //   res.status(500).json({ error: 'Error Employee Cannot enter' });
-      // }
- 
 
+const getSales= (async (req,res)=>{
+
+   console.log("getsales func er vitore : "+req.user_role);
+
+    await pool.query("SELECT * FROM usersignup ORDER BY user_id ASC ",(error,result)=>{
+      if(error)
+      throw error;
+      
+      
+      res.status(200).json(result.rows);
+        
+      }
+  )
 })
+
 const getContact = (req, res) => {
-    const user_id = parseInt(req.params.id)
+    const user_id = parseInt(req.params.user_id)
   
     pool.query('SELECT * FROM accounts WHERE user_id = $1', [user_id], (error, results) => {
       if (error) {
@@ -72,7 +68,8 @@ const getContact = (req, res) => {
       res.status(200).json(results.rows)
     })
   }
-  const getProducts = (req, res) => {
+
+const getProducts = (req, res) => {
   //  const product_id = parseInt(req.params.id)
   
     pool.query('SELECT * FROM products ', (error, results) => {
@@ -290,7 +287,8 @@ const compareOtp = async (req, res) => {
       },'alif2023',{expiresIn:'5 days'});
       res.status(200).json({
         "access_token":token,
-        "message":"Login Successful"
+        "message":"Login Successful",
+        "user_role":newUser.rows[0].user_role
       })
 
   
@@ -309,8 +307,8 @@ const compareOtp = async (req, res) => {
     
 
   const updateContact = (request, response) => {
-    const user_id = parseInt(request.params.id)
-    const { name, email } = request.body
+    const user_id = parseInt(request.params.user_id)
+    const { email } = request.body
   
     pool.query(
       'UPDATE accounts SET  email = $1 WHERE user_id = $2',

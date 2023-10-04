@@ -18,14 +18,15 @@ req.user_role=user_role;
 
 console.log(decoded);
 console.log(user_role);
-if(req.user_role==1){
-    next();
-}
+// if(req.user_role==1){
+//     next();
+// }
 
-else{
-    alert('Why came here MF');
+// else{
+//     alert('Why came here MF');
     
-}
+// }
+next();
 
 }catch(err){
 next("Authentication Failure");
