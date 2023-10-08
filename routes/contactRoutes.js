@@ -12,7 +12,7 @@ const {
     getProducts,
     getSales,
     userSignup,
- 
+    requisition,
     getContact}=require("../controllers/contactController");
 
 router.use("/private", require("../middleware/checkLogin.js"));
@@ -26,6 +26,7 @@ router.route("/products").get(getProducts);
 // router.route("/login").post(createloginapp);
 // router.route("/signup").post(createSignup);
 router.route("/usersignup").post(userSignup);
+router.route("/requisition").post(requisition);
 router.route("/userlogin").post(userLogin);
 router.route("/:user_id").put(updateContact);
 //router.route("/updatesales/:id").put(updateSales);

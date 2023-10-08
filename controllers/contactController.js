@@ -132,6 +132,7 @@ const getProducts = (req, res) => {
 //   })
 //  }
  ////////Remark website er jnnw Signup from Admin
+ 
  var compareotpp;
  function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -172,6 +173,7 @@ const getProducts = (req, res) => {
   }
 }
 const compareOtp = async (req, res) => {
+  
   console.log(req.body);
   console.log("Teri ooo");
   const { verificationcode } = req.body;
@@ -193,7 +195,7 @@ const compareOtp = async (req, res) => {
 }
  const userSignup = async (req, res) => {
  
-  const { user_id,user_name,user_email,user_password,user_role } = req.body
+  const { user_id,itemName,quantity,reason,neededDate }=req.body;
   const otp = sendOtp(user_email); 
   console.log(otp+"sign up otp");
   const salt=await bcrypt.genSalt();
@@ -201,6 +203,19 @@ const compareOtp = async (req, res) => {
   
   
   pool.query('INSERT INTO userSignup (user_id, user_name,user_password,user_role) VALUES ($1, $2,$3,$4) RETURNING *', [user_id,user_name,pass,user_role], (error, results) => {
+  if (error) {
+    throw error
+  }
+  res.status(201).send(`User added with ID: ${results.rows[0].user_id}`)
+})
+ 
+}
+const requisition = async (req, res) => {
+ 
+  const { users_id,itemName,quantity,reason,neededDate} = req.body
+ 
+  
+  pool.query('INSERT INTO stock_requisition (user_id, item_name,quantity,reason,needed_date) VALUES ($1, $2,$3,$4,$5) RETURNING *', [users_id,itemName,quantity,reason,neededDate], (error, results) => {
   if (error) {
     throw error
   }
@@ -341,4 +356,4 @@ const compareOtp = async (req, res) => {
 // };
 
 
-module.exports={getSales,getContacts,updateContact,deleteContact,getContact,get,userLogin,getProducts,userSignup,sendOtp,compareOtp};
+module.exports={requisition,getSales,getContacts,updateContact,deleteContact,getContact,get,userLogin,getProducts,userSignup,sendOtp,compareOtp};
