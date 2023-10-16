@@ -1,18 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const transporter=require("../middleware/otp");
+
 const {
     getContacts,
     compareOtp,
     updateContact,
     deleteContact,
     get,
+    requisitionRequestList,
+    requisitionRequestListPer,
+    requisitionRequest,
     userLogin,
     sendOtp,
     getProducts,
     getSales,
     userSignup,
-    requisition,
+    requisitionPost,
+    
     getContact}=require("../controllers/contactController");
 
 router.use("/private", require("../middleware/checkLogin.js"));
@@ -26,9 +30,13 @@ router.route("/products").get(getProducts);
 // router.route("/login").post(createloginapp);
 // router.route("/signup").post(createSignup);
 router.route("/usersignup").post(userSignup);
-router.route("/requisition").post(requisition);
+router.route("/requisitionrequestlist/get").get(requisitionRequestList);
+router.route("/requisitionrequestlistper/getper/:user_id").get(requisitionRequestListPer);
+router.route("/requisition/get").get(requisitionRequest);
+router.route("/requisition/post").post(requisitionPost);
 router.route("/userlogin").post(userLogin);
 router.route("/:user_id").put(updateContact);
+
 //router.route("/updatesales/:id").put(updateSales);
 router.route("/:id").delete(deleteContact);
 router.route("/send-otp").post(sendOtp);
