@@ -7,6 +7,7 @@ const {
     updateContact,
     deleteContact,
     get,
+    requisitionRequestListPerUpdate,
     requisitionRequestList,
     requisitionRequestListPer,
     requisitionRequest,
@@ -36,6 +37,7 @@ router.route("/requisition/get").get(requisitionRequest);
 router.route("/requisition/post").post(requisitionPost);
 router.route("/userlogin").post(userLogin);
 router.route("/:user_id").put(updateContact);
+router.route("/requisitionrequestlistper/editper/:user_id").put(requisitionRequestListPerUpdate);
 
 //router.route("/updatesales/:id").put(updateSales);
 router.route("/:id").delete(deleteContact);

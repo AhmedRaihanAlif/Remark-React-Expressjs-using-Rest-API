@@ -255,7 +255,7 @@ const requisitionRequestList = (req, res) => {
   //  const product_id = parseInt(req.params.id)
 
   pool.query(
-    "  SELECT stock_requisition.user_id, usersignup.user_name, stock_requisition.item_name, stock_requisition.quantity,stock_requisition.reason,stock_requisition.needed_date,stock_requisition.status FROM stock_requisition JOIN usersignup ON stock_requisition.user_id = usersignup.user_id ",
+    "  SELECT stock_requisition.user_id, usersignup.user_name, stock_requisition.item_name, stock_requisition.quantity,stock_requisition.reason,stock_requisition.needed_date,stock_requisition.status FROM stock_requisition JOIN usersignup ON stock_requisition.user_id = usersignup.user_id where status='pending' ",
     (error, results) => {
       if (error) {
         throw error;
@@ -278,6 +278,24 @@ const requisitionRequestListPer = (req, res) => {
     }
   );
 };
+
+const requisitionRequestListPerUpdate = (request, response) => {
+  const user_id =request.params.user_id;
+  const { quantity,needed_date,item_name } = request.body;
+
+  pool.query(
+    "UPDATE stock_requisition SET quantity = $1,needed_date=$2,status='Approved' WHERE item_name =$3 and user_id = $4",
+    [ quantity,needed_date,item_name,user_id],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).send(`User modified with ID: ${user_id}`);
+    }
+  );
+};
+
+
 
 const userLogin = async (req, res) => {
   console.log("Come this userlogin");
@@ -373,4 +391,5 @@ module.exports = {
   sendOtp,
   compareOtp,
   requisitionPost,
+  requisitionRequestListPerUpdate,
 };
