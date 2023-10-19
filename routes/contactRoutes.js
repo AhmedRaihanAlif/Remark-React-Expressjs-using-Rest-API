@@ -17,7 +17,7 @@ const {
     getSales,
     userSignup,
     requisitionPost,
-    
+   
     getContact}=require("../controllers/contactController");
 
 router.use("/private", require("../middleware/checkLogin.js"));
@@ -34,6 +34,7 @@ router.route("/usersignup").post(userSignup);
 router.route("/requisitionrequestlist/get").get(requisitionRequestList);
 router.route("/requisitionrequestlistper/getper/:user_id").get(requisitionRequestListPer);
 router.route("/requisition/get").get(requisitionRequest);
+
 router.route("/requisition/post").post(requisitionPost);
 router.route("/userlogin").post(userLogin);
 router.route("/:user_id").put(updateContact);

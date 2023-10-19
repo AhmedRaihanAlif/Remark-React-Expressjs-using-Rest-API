@@ -36,6 +36,16 @@ const getContacts = async (req, res) => {
     }
   );
 };
+// const getUsers = async (req, res) => {
+//   await pool.query(
+//     "SELECT * FROM stock_requisition where  ",
+//     (error, result) => {
+//       if (error) throw error;
+
+//       res.status(200).json(result.rows);
+//     }
+//   );
+// };
 
 const getSales = async (req, res) => {
   console.log("getsales func er vitore : " + req.user_role);
@@ -45,6 +55,14 @@ const getSales = async (req, res) => {
     (error, result) => {
       if (error) throw error;
 
+      // const dataToSend = {
+      //   rows: result.rows,
+      //   userRole:req.user_role,
+      //   userId:req.user_id
+
+      
+      // };
+      
       res.status(200).json(result.rows);
     }
   );
@@ -186,7 +204,7 @@ const compareOtp = async (req, res) => {
   }
 };
 const userSignup = async (req, res) => {
-  const { user_id, itemName, quantity, reason, neededDate } = req.body;
+  const {user_id, user_name,user_email,user_password,user_role} = req.body;
   const otp = sendOtp(user_email);
   console.log(otp + "sign up otp");
   const salt = await bcrypt.genSalt();
@@ -268,7 +286,7 @@ const requisitionRequestListPer = (req, res) => {
   const user_id =  req.params.user_id;
 
   pool.query(
-    "SELECT stock_requisition.user_id, usersignup.user_name, stock_requisition.item_name, stock_requisition.quantity,stock_requisition.reason,Date(stock_requisition.needed_date),stock_requisition.status FROM stock_requisition  JOIN usersignup ON stock_requisition.user_id = usersignup.user_id  where stock_requisition.user_id=$1",
+    "SELECT stock_requisition.user_id, usersignup.user_name, stock_requisition.item_name, stock_requisition.quantity,stock_requisition.reason,Date(stock_requisition.needed_date),stock_requisition.status FROM stock_requisition  JOIN usersignup ON stock_requisition.user_id = usersignup.user_id  where stock_requisition.user_id=$1 and stock_requisition.status='pending'",
     [user_id],
     (error, results) => {
       if (error) {
@@ -385,6 +403,7 @@ module.exports = {
   deleteContact,
   getContact,
   get,
+  
   userLogin,
   getProducts,
   userSignup,
